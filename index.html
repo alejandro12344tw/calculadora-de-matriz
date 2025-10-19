@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Operaciones con Matrices</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body.futurista {
+      background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+      color: #e0e0e0;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body.clasico {
+      background: #f4f4f4;
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    .container.futurista {
+      background: rgba(20, 20, 40, 0.95);
+      border: 1px solid #00ffff33;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    }
+
+    .container.clasico {
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: none;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    h1.futurista {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff88;
+    }
+
+    h1.clasico {
+      color: #007BFF;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      text-align: center;
+    }
+
+    label.futurista {
+      color: #00ffff;
+    }
+
+    label.clasico {
+      color: #007BFF;
+    }
+
+    input[type="number"], select {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      font-size: 1em;
+      width: 70px;
+      text-align: center;
+    }
+
+    input.futurista, select.futurista {
+      border: 2px solid #00ffff55;
+      background-color: #121212;
+      color: #00ffff;
+    }
+
+    input.clasico, select.clasico {
+      border: 2px solid #ccc;
+      background-color: #fff;
+      color: #333;
+    }
+
+    button {
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button.futurista {
+      background-color: #00ffff;
+      color: #121212;
+      box-shadow: 0 0 15px #00ffff88;
+    }
+
+    button.futurista:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    button.clasico {
+      background-color: #007BFF;
+      color: white;
+      box-shadow: none;
+    }
+
+    .fila-columna {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .fila-columna div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #variaciones {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    #resumenOperacion {
+      margin-top: 15px;
+      font-size: 1.2em;
+      text-align: center;
+      width: 100%;
+    }
+
+    #resumenOperacion.futurista {
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff88;
+    }
+
+    #resumenOperacion.clasico {
+      color: #007BFF;
+    }
+
+    #matrizA, #matrizB, #matrizC {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: #ff4444;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      input[type="number"] {
+        width: 50px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      table {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+    <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Matrices</title>
+  <link rel="manifest" href="/static/manifest.json">
+        <meta name="theme-color" content="#00ffcc">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    /* tus estilos aquí */
+  </style>
+</head>
+
+</head>
+<body>
+  <div class="container">
+    <h1> Bienvenido a la calculadora de matrices</h1>
+    <div style="text-align:center;">
+      <button type="button" onclick="alternarEstilo()">Cambiar estilo</button>
+    </div>
+    <form method="POST">
+      <div class="fila-columna">
+        <div>
+          <label for="filas">Filas:</label>
+          <input type="number" id="filas" name="filas" value="{{ filas }}" min="1" required>
+        </div>
+        <div>
+          <label for="columnas">Columnas:</label>
+          <input type="number" id="columnas" name="columnas" value="{{ columnas }}" min="1" required>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <label>Tipo de operación:</label><br>
+        <button type="button" onclick="seleccionarTipo('suma')">Suma</button>
+        <button type="button" onclick="seleccionarTipo('resta')">Resta</button>
+        <button type="button" onclick="seleccionarTipo('multiplicacion')">Multiplicación</button>
+        <button type="button" onclick="seleccionarTipo('division')">División</button>
+      </div>
+
+      <div id="variaciones" class="hidden">
+        <label for="operacion">Variación:</label>
+        <select id="operacion" name="operacion" required onchange="actualizarVisibilidad()"></select>
+      </div>
+
+      <div id="resumenOperacion">Selecciona una operación para comenzar</div>
+
+      <h3 style="text-align:center;">Matriz A</h3>
+      <div id="matrizA">
+        <table>
+          {% for i in range(filas) %}
+          <tr>
+            {% for j in range(columnas) %}
+            <td><input type="number" name="m1_{{ i }}_{{ j }}" value="0"></td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <h3 style="text-align:center;">Matriz B</h3>
+      <div id="matrizB">
+        <table>
+          {% for i in range(filas) %}
+          <tr>
+            {% for j in range(columnas) %}
+            <td><input type="number" name="m2_{{ i }}_{{ j }}" value="0"></td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <h3 style="text-align:center;">Matriz C</h3>
+      <div id="matrizC">
+        <table>
+          {% for i in range(filas) %}
+          <tr>
+            {% for j in range(columnas) %}
+            <td><input type="number" name="m3_{{ i }}_{{ j }}" value="0"></td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div style="text-align:center;">
+        <button type="submit">Calcular</button>
+      </div>
+    </form>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if resultado %}
+      <h3 style="text-align:center;">Resultado:</h3>
+      <table>
+        {% for fila in resultado %}
+        <tr>
+          {% for valor in fila %}
+          <td>{{ valor }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+
+          {% if explicacion %}
+      <h3 style="text-align:center;">Procedimiento:</h3>
+      <table>
+        {% for fila in explicacion %}
+        <tr>
+          {% for paso in fila %}
+          <td>{{ paso }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </div>
+
+  <script>
+    const operacionSelect = document.getElementById("operacion");
+    const variacionesDiv = document.getElementById("variaciones");
+    const resumen = document.getElementById("resumenOperacion");
+    const matrizA = document.getElementById("matrizA");
+    const matrizB = document.getElementById("matrizB");
+    const matrizC = document.getElementById("matrizC");
+
+    const opciones = {
+      suma: {
+        "sumar_ab": "A + B",
+        "sumar_abc": "A + B + C",
+        "sumar_bc": "B + C"
+      },
+      resta: {
+        "resta_ab": "A − B",
+        "resta_ba": "B − A",
+        "resta_ac": "A − C",
+        "resta_abc": "A − B − C"
+      },
+      multiplicacion: {
+        "multiplicar_ab": "A × B",
+        "multiplicar_ba": "B × A",
+        "multiplicar_ac": "A × C",
+        "multiplicar_abc": "A × B × C"
+      },
+      division: {
+        "division_ab": "A ÷ B",
+        "division_ba": "B ÷ A",
+        "division_ac": "A ÷ C",
+        "division_abc": "A ÷ B ÷ C"
+      }
+    };
+
+    function seleccionarTipo(tipo) {
+      operacionSelect.innerHTML = "";
+      for (const key in opciones[tipo]) {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = opciones[tipo][key];
+        operacionSelect.appendChild(option);
+      }
+      variacionesDiv.classList.remove("hidden");
+      actualizarVisibilidad();
+    }
+
+    function actualizarVisibilidad() {
+      const operacion = operacionSelect.value;
+      const texto = operacionSelect.options[operacionSelect.selectedIndex].textContent;
+      resumen.textContent = "Estás realizando: " + texto;
+
+      matrizA.style.display = "block";
+      matrizB.style.display = "block";
+      matrizC.style.display = "block";
+
+      if (operacion.endsWith("_ab") || operacion.endsWith("_ba") || operacion.endsWith("_ac")) {
+        matrizC.style.display = "none";
+      } else if (operacion.endsWith("_bc")) {
+        matrizA.style.display = "none";
+      } else if (operacion.endsWith("_abc")) {
+        // Mostrar todas
+      }
+    }
+
+    function alternarEstilo() {
+      const body = document.body;
+      const container = document.querySelector('.container');
+      const h1 = document.querySelector('h1');
+      const labels = document.querySelectorAll('label');
+      const inputs = document.querySelectorAll('input');
+      const selects = document.querySelectorAll('select');
+      const buttons = document.querySelectorAll('button');
+      const resumen = document.getElementById('resumenOperacion');
+
+      const modoFuturista = body.classList.contains('futurista');
+
+      body.classList.toggle('futurista', !modoFuturista);
+      body.classList.toggle('clasico', modoFuturista);
+      container.classList.toggle('futurista', !modoFuturista);
+      container.classList.toggle('clasico', modoFuturista);
+      h1.classList.toggle('futurista', !modoFuturista);
+      h1.classList.toggle('clasico', modoFuturista);
+      resumen.classList.toggle('futurista', !modoFuturista);
+      resumen.classList.toggle('clasico', modoFuturista);
+
+      labels.forEach(label => {
+        label.classList.toggle('futurista', !modoFuturista);
+        label.classList.toggle('clasico', modoFuturista);
+      });
+
+      inputs.forEach(input => {
+        input.classList.toggle('futurista', !modoFuturista);
+        input.classList.toggle('clasico', modoFuturista);
+      });
+
+      selects.forEach(select => {
+        select.classList.toggle('futurista', !modoFuturista);
+        select.classList.toggle('clasico', modoFuturista);
+      });
+
+      buttons.forEach(button => {
+        button.classList.toggle('futurista', !modoFuturista);
+        button.classList.toggle('clasico', modoFuturista);
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add('futurista');
+      document.querySelector('.container').classList.add('futurista');
+      document.querySelector('h1').classList.add('futurista');
+      document.getElementById('resumenOperacion').classList.add('futurista');
+      document.querySelectorAll('label').forEach(label => label.classList.add('futurista'));
+      document.querySelectorAll('input').forEach(input => input.classList.add('futurista'));
+      document.querySelectorAll('select').forEach(select => select.classList.add('futurista'));
+      document.querySelectorAll('button').forEach(button => button.classList.add('futurista'));
+    });
+  </script>
+</body>
+</html>
